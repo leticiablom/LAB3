@@ -2,7 +2,7 @@
 
 **Disciplina:** Laboratório de Experimentação de Software  
 **Professor:** João Paulo Carneiro Aramuni  
-**Grupo:** [Letícia Rodrigues Blom e Júlia Borges Araújo]    
+**Grupo:** Letícia Rodrigues Blom e Júlia Borges Araújo
 
 ---
 
