@@ -108,11 +108,25 @@ def salvar_em_csv(prs, filepath):
 
     print(f"\n PRs salvos em '{filepath}' (total: {len(prs)})")
 
+def salvar_repositorios(repositories, filepath):
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["full_name", "html_url", "stargazers_count", "language"])
+        for repo in repositories:
+            writer.writerow([
+                repo["full_name"],
+                repo["html_url"],
+                repo["stargazers_count"],
+                repo["language"]
+            ])
+    print(f" Repositórios salvos em '{filepath}'")
+
 def main():
     LIMITE_TOTAL_PRS_VALIDOS = 200
     repositories = get_top_repositories()
     all_filtered_prs = []
     csv_path = os.path.join(RESULTS_PATH, "prs_filtered.csv")
+    repos_csv_path = os.path.join(RESULTS_PATH, "repositorios_selecionados.csv")
 
     try:
         for repo in repositories:
@@ -137,6 +151,7 @@ def main():
 
     finally:
         salvar_em_csv(all_filtered_prs, csv_path)
+        salvar_repositorios(repositories, repos_csv_path)
 
 if __name__ == "__main__":
     main()
