@@ -3,9 +3,9 @@ import time
 import csv
 import os
 from datetime import datetime, timedelta
+from config import GITHUB_TOKEN
 
 # Configurações da API do GitHub
-GITHUB_TOKEN = "TOKEN AQUI"
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json"

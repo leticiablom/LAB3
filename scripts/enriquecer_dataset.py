@@ -2,11 +2,10 @@ import csv
 import requests
 import os
 import time
-
+from config import GITHUB_TOKEN
 from datetime import datetime
 
 # CONFIGURAÇÕES
-GITHUB_TOKEN = "TOKEN AQUI"
 HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json"
