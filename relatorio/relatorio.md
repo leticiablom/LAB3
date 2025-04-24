@@ -16,36 +16,15 @@ No GitHub, revisões de código são feitas por meio de *pull requests* (PRs), o
 
 Este laboratório tem como objetivo analisar a atividade de *code review* em repositórios populares do GitHub. O foco está em identificar variáveis que podem influenciar o sucesso de um pull request — definido como a sua aceitação (status `merged`) — e o número de revisões realizadas no processo.
 
----
+### Hipóteses Iniciais
 
-## Metodologia
+Este relatório analisa como características dos Pull Requests (PRs) — como tamanho, tempo de análise, descrição e interações — se relacionam com dois aspectos principais:
 
-### 1. Coleta de Dados
+A. O feedback final da revisão (se o PR foi aceito ou rejeitado)
 
-Foram selecionados PRs de repositórios que atendem aos seguintes critérios:
+B. O número de revisões realizadas (iterações até a aprovação)
 
-- Estão entre os 200 mais populares do GitHub.
-- Possuem ao menos 100 PRs com status `merged` ou `closed`.
-- Possuem pelo menos uma revisão registrada.
-- O tempo entre a criação e o encerramento do PR é superior a 1 hora (para evitar análises automáticas por bots ou pipelines).
-
-A coleta foi realizada por meio da API do GitHub, utilizando scripts próprios automatizados.
-
----
-
-### 2. Métricas Coletadas
-
-| Dimensão           | Métrica Coletada                                                  |
-|--------------------|--------------------------------------------------------------------|
-| **Tamanho**         | Número de arquivos modificados, linhas adicionadas e removidas    |
-| **Tempo de Análise**| Tempo entre a criação e o fechamento/merge do PR                  |
-| **Descrição**       | Número de caracteres no corpo da descrição do PR (em Markdown)    |
-| **Interações**      | Número de participantes e número de comentários no PR             |
-
----
-
-### 3. Questões de Pesquisa e Hipóteses
-
+Formulamos hipóteses simples para cada relação, buscando entender padrões que podem melhorar o processo de revisão colaborativa.
 
 #### A. Feedback Final das Revisões (Status do PR)
 
@@ -74,17 +53,154 @@ A coleta foi realizada por meio da API do GitHub, utilizando scripts próprios a
 
 - **RQ08. Qual a relação entre as interações nos PRs e o número de revisões realizadas?**  
   *Hipótese:* Um maior número de interações tende a estar associado a mais revisões, já que comentários e sugestões frequentemente resultam em novas versões do PR.
+ 
+---
 
+## Metodologia
+
+### 1. Coleta de Dados
+
+Foram selecionados PRs de repositórios que atendem aos seguintes critérios:
+
+- Estão entre os 200 mais populares do GitHub.
+- Possuem ao menos 100 PRs com status `merged` ou `closed`.
+- Possuem pelo menos uma revisão registrada.
+- O tempo entre a criação e o encerramento do PR é superior a 1 hora (para evitar análises automáticas por bots ou pipelines).
+
+A coleta foi realizada por meio da API do GitHub, utilizando scripts próprios automatizados.
 
 ---
 
-## Análise de Dados
+### 2. Métricas Coletadas
 
-As relações entre as variáveis serão avaliadas por meio de testes estatísticos, conforme a natureza dos dados:
+| Dimensão           | Métrica Coletada                                                  |
+|--------------------|--------------------------------------------------------------------|
+| **Tamanho**         | Número de arquivos modificados, linhas adicionadas e removidas    |
+| **Tempo de Análise**| Tempo entre a criação e o fechamento/merge do PR                  |
+| **Descrição**       | Número de caracteres no corpo da descrição do PR (em Markdown)    |
+| **Interações**      | Número de participantes e número de comentários no PR             |
 
-- **Correlação de Spearman:** Utilizada para variáveis ordinais ou que não seguem uma distribuição normal.
-- **Correlação de Pearson:** Utilizada para variáveis contínuas com distribuição normal.
+As análises foram feitas usando valores medianos para sumarização e utilizamos o teste de correlação de Spearman por ser não paramétrico (não exige normalidade dos dados).
 
-A escolha do teste apropriado será justificada com base em uma análise da distribuição dos dados (utilizando histogramas, boxplots e testes de normalidade).
+---
+
+## Gráficos Gerados e Análise de Dados
+
+## A. Feedback Final das Revisões
+
+### RQ01. Tamanho do PR vs. Status (Merged/Closed)
+
+- **Hipótese:** PRs maiores são mais difíceis de revisar e podem ser rejeitados com mais frequência.  
+- **Correlação (linhas adicionadas x status):** ρ = **-0.52**  
+- **Correlação (arquivos modificados x status):** ρ = **-0.49**
+
+**Resultado:** Correlação negativa moderada, indicando que PRs maiores têm maior chance de **não serem aceitos**.
+
+---
+
+### RQ02. Tempo de Análise vs. Status
+
+- **Hipótese:** PRs que demoram mais na análise tendem a ser rejeitados.  
+- **Correlação (tempo de análise x status):** ρ = **-0.58**
+
+**Resultado:** Correlação negativa moderada/forte. PRs que demoram mais para serem revisados tendem a ser **rejeitados com maior frequência**.
+
+---
+
+### RQ03. Descrição do PR vs. Status
+
+- **Hipótese:** PRs bem descritos tendem a ser aceitos com mais frequência.  
+- **Correlação (tamanho da descrição x status):** ρ = **+0.55**
+
+**Resultado:** Correlação positiva moderada. Descrições mais detalhadas estão associadas a **maior taxa de aceitação**.
+
+---
+
+### RQ04. Interações (comentários e participantes) vs. Status
+
+- **Hipótese:** Mais interações indicam maior chance de aceitação (por colaboração), mas podem também indicar problemas.  
+- **Correlação (nº de comentários x status):** ρ = **-0.31**  
+- **Correlação (nº de participantes x status):** ρ = **+0.25**
+
+**Resultado:**  
+- Comentários em excesso estão levemente relacionados à **rejeição**.  
+- Mais participantes tendem a contribuir com **aprovação**.
+
+---
+
+## B. Número de Revisões
+
+### RQ05. Tamanho do PR vs. Número de Revisões
+
+- **Hipótese:** PRs maiores passam por mais revisões.  
+- **Correlação (linhas adicionadas x nº revisões):** ρ = **+0.80**  
+- **Correlação (arquivos modificados x nº revisões):** ρ = **+0.63**
+
+**Resultado:** Correlação forte positiva. PRs maiores exigem mais revisões.
+
+---
+
+### RQ06. Tempo de Análise vs. Número de Revisões
+
+- **Hipótese:** PRs abertos por mais tempo tendem a passar por mais revisões.  
+- **Correlação (tempo de análise x nº revisões):** ρ = **+0.63**
+
+**Resultado:** Correlação moderada positiva. Tempo está diretamente ligado ao número de iterações.
+
+---
+
+### RQ07. Descrição do PR vs. Número de Revisões
+
+- **Hipótese:** Descrições completas reduzem a necessidade de revisões.  
+- **Correlação (tamanho da descrição x nº revisões):** ρ = **-0.40**
+
+**Resultado:** Correlação negativa moderada. Boas descrições ajudam a evitar múltiplas revisões.
+
+---
+
+### RQ08. Interações vs. Número de Revisões
+
+- **Hipótese:** Mais interações implicam em mais revisões.  
+- **Correlação (comentários x nº revisões):** ρ = **+0.45**  
+- **Correlação (participantes x nº revisões):** ρ = **+0.41**
+
+**Resultado:** Correlação positiva moderada. Engajamento gera mais iteração — talvez por melhorias progressivas.
+
+---
+
+## 4. Discussão das Hipóteses vs Resultados
+
+| Questão | Hipótese Confirmada? | Comentário |
+|--------|------------------------|------------|
+| RQ01 | Sim | PRs maiores tendem a ser rejeitados |
+| RQ02 | Sim | PRs demorados também são mais rejeitados |
+| RQ03 | Sim | Descrições boas ajudam na aprovação |
+| RQ04 | Parcial | Mais comentários ≠ aceitação. Mais participantes = melhor |
+| RQ05 | Sim | Tamanho influencia diretamente revisões |
+| RQ06 | Sim | Revisões prolongadas acumulam mais iterações |
+| RQ07 | Sim | Descrição reduz revisões |
+| RQ08 | Sim | Mais comentários e participação = mais iterações |
+
+---
+
+## 5. Justificativa Estatística
+
+Utilizou-se o **teste de Spearman** por ser ideal para:
+
+- Dados **não-normais** ou com valores atípicos
+- Relações **monotônicas** (uma variável cresce ou decresce com a outra)
+- Contextos com **ordenação natural** (como status aceito/rejeitado)
+
+Mais robusto e adequado para análise de repositórios de código reais.
+
+---
+
+## Conclusão
+
+O estudo mostrou que:
+
+- PRs **grandes e vagos** tendem a ser rejeitados e revisados mais vezes.
+- PRs **bem descritos e colaborativos** são aceitos com mais frequência e rapidez.
+- O **tempo de análise** é um fator importante — revisões longas tendem à rejeição.
 
 ---
